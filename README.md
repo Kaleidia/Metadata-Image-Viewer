@@ -6,3 +6,5 @@ It can display the image, metadata in the "parameters" group and the comfy ui "p
 Buttons on top let the user open a directory, cycle through the images within ("prev" and "next"), delete files to the recycle bin (not directly deleting as safety measure), as well as set image to 1:1 or "fit to area".
 
 There is a file counter in the statusbar which shows current file and total files in directory. The files are checked by a thread, so if files are deleted or added the counter is updated and shows the right amount and location (index+1).
+
+This tool is not supposed to be an image editor or tool for minor manipulations, it is just a viewer with delete functionality...
