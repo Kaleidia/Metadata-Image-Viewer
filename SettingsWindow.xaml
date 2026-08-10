@@ -1,0 +1,55 @@
+﻿<Window x:Class="imageViewer.SettingsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:imageViewer"
+        mc:Ignorable="d"
+        Background="{DynamicResource PanelBackgroundBrush}"
+        Foreground="{DynamicResource AppForegroundBrush}"
+        Title="AI Image Viewer - Settings" SizeToContent="WidthAndHeight">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <GroupBox Header="Theme" Margin="10,5">
+            <StackPanel Orientation="Horizontal">
+                <Button ToolTip="Set Light Theme" Click="SetLightTheme_Click">
+                    <Button.Content>
+                        <!-- Fallback handles Windows 11 down to Windows 10 seamlessly -->
+                        <TextBlock Text="&#xEC8A;"/>
+                    </Button.Content>
+                </Button>
+                <Button ToolTip="Set Dark Theme" Click="SetDarkTheme_Click" >
+                    <Button.Content>
+                        <!-- Fallback handles Windows 11 down to Windows 10 seamlessly-->
+                        <TextBlock Text="&#xEC46;" />
+                    </Button.Content>
+                </Button>
+                <Button ToolTip="Set Midnight Theme" Content="Midnight" Width="100" FontFamily="Segoe UI" Click="SetMidnightTheme_Click" />
+            </StackPanel>
+        </GroupBox>
+        <GroupBox Header="Font Settings" Margin="10,5" Grid.Row="1">
+            <StackPanel Orientation="Horizontal">
+                <Label Content="Font Size:" VerticalAlignment="Center" Margin="0,0,5,0" Foreground="{DynamicResource AppForegroundBrush}"
+/>
+                <Button ToolTip="Decrease Font Size" Click="DecreaseFontSize_Click">
+                    <Button.Content>
+                        <!-- Fallback handles Windows 11 down to Windows 10 seamlessly -->
+                        <TextBlock Text="&#xE8E7;"/>
+                    </Button.Content>
+                </Button>
+                <TextBox Width="50" Height="35" Text="{Binding CurrentFontSize, StringFormat={}{0:F0}, Mode=OneWay}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                <Button ToolTip="Increase Font Size" Click="IncreaseFontSize_Click">
+                    <Button.Content>
+                        <!-- Fallback handles Windows 11 down to Windows 10 seamlessly -->
+                        <TextBlock Text="&#xE8E8;"/>
+                    </Button.Content>
+                </Button>
+            </StackPanel>
+        </GroupBox>
+            <Button Grid.Row="2" Content="Close" Width="100" FontStretch="Normal" FontFamily="Segoe UI" Click="CloseButton_Click" IsCancel="True"/>
+    </Grid>
+</Window>

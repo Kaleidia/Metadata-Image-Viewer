@@ -1,10 +1,11 @@
 ﻿<Window x:Class="ImageViewer.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Background="#1E1E1E" Foreground="White"
-        Title="AI Image Viewer" Height="600" Width="900"
-        PreviewKeyDown="Window_PreviewKeyDown">
-    <Grid>
+        Background="{DynamicResource AppBackgroundBrush}"
+        Title="{Binding TitleText, Mode=OneWay}" Height="600" Width="900"
+        PreviewKeyDown="Window_PreviewKeyDown"
+        Icon="/icon.png" FontSize="14">
+    <Grid Background="{DynamicResource PanelBackgroundBrush}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <!-- Top Toolbar -->
@@ -15,13 +16,61 @@
 
         <!-- 1. Toolbar -->
         <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Stretch">
-            <Button Content="Open Folder" Click="OpenFolder_Click" Foreground="White" Background="#1E1E1E" Margin="5" Padding="5"/>
-            <Button Content="Delete" Click="DeleteButton_Click" Margin="5" Foreground="White" Background="#1E1E1E" Padding="5"/>
-            <Button Content="Previous" Click="Prev_Click" Foreground="White" Background="#1E1E1E" Margin="5" Padding="5"/>
-            <Button Content="Next" Click="Next_Click" Foreground="White" Background="#1E1E1E" Margin="5" Padding="5"/>
-            <Button Content="Fit to Area" Click="FitToArea_Click" Foreground="White" Background="#1E1E1E" Margin="5" Padding="5"/>
-            <Button Content="1:1 Size" Click="ActualSize_Click" Foreground="White" Background="#1E1E1E" Margin="5" Padding="5"/>
-            </StackPanel>
+            <Button ToolTip="Open Folder" Click="OpenFolder_Click" >
+                <Button.Content>
+                    <!-- Fallback handles Windows 11 down to Windows 10 seamlessly -->
+                    <TextBlock Text="&#xE838;"/>
+                </Button.Content>
+            </Button>
+            <Button ToolTip="Delete current image" Click="DeleteButton_Click">
+                <Button.Content>
+                    <!-- Fallback handles Windows 11 down to Windows 10 seamlessly -->
+                    <TextBlock Text="&#xE74D;"/>
+                </Button.Content>
+            </Button>
+            <Button ToolTip="Previous Image" Click="Prev_Click">
+                <Button.Content>
+                    <!-- Fallback handles Windows 11 down to Windows 10 seamlessly -->
+                    <TextBlock Text="&#xE76B;"/>
+                </Button.Content>
+            </Button>
+            <Button ToolTip="Next Image" Click="Next_Click">
+                <Button.Content>
+                    <!-- Fallback handles Windows 11 down to Windows 10 seamlessly -->
+                    <TextBlock Text="&#xE76C;"/>
+                </Button.Content>
+            </Button>
+            <Button ToolTip="Zoom out" Click="ZoomOut_Click">
+                <Button.Content>
+                    <!-- Fallback handles Windows 11 down to Windows 10 seamlessly -->
+                    <TextBlock Text="&#xE71F;"/>
+                </Button.Content>
+            </Button>
+            <Button ToolTip="Zoom in" Click="ZoomIn_Click">
+                <Button.Content>
+                    <!-- Fallback handles Windows 11 down to Windows 10 seamlessly -->
+                    <TextBlock Text="&#xE8A3;"/>
+                </Button.Content>
+            </Button>
+            <Button ToolTip="Fit to Area" Click="FitToArea_Click">
+                <Button.Content>
+                    <!-- Fallback handles Windows 11 down to Windows 10 seamlessly -->
+                    <TextBlock Text="&#xE9a6;"/>
+                </Button.Content>
+            </Button>
+            <Button ToolTip="1:1 Size or 100% image size" Click="ActualSize_Click">
+                <Button.Content>
+                    <!-- Fallback handles Windows 11 down to Windows 10 seamlessly -->
+                    <TextBlock Text="&#xE740;"/>
+                </Button.Content>
+            </Button>
+            <Button ToolTip="Setting" Click="SysButton_Click">
+                <Button.Content>
+                    <!-- Fallback handles Windows 11 down to Windows 10 seamlessly -->
+                    <TextBlock Text="&#xE713;" FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets"/>
+                </Button.Content>
+            </Button>
+        </StackPanel>
 
         <Grid Grid.Row="1">
             <Grid.RowDefinitions>
@@ -33,8 +82,8 @@
                 <!-- Metadata Panel -->
             </Grid.RowDefinitions>
 
-            <Border Grid.Row="0" Background="#1E1E1E" Margin="10">
-                    <ScrollViewer x:Name="ImageScrollViewer" 
+            <Border Grid.Row="0" Margin="10">
+                <ScrollViewer x:Name="ImageScrollViewer" 
                   HorizontalScrollBarVisibility="Auto" 
                   VerticalScrollBarVisibility="Auto"
                   PreviewMouseWheel="ImageScrollViewer_PreviewMouseWheel"
@@ -42,33 +91,34 @@
                   MouseMove="ImageScrollViewer_MouseMove"
                   MouseLeftButtonUp="ImageScrollViewer_MouseLeftButtonUp"
                   Cursor="Hand">
-                        <Image Name="MainImage" Stretch="None">
-                            <Image.LayoutTransform>
-                                <ScaleTransform x:Name="ImageScale" ScaleX="1" ScaleY="1"/>
-                            </Image.LayoutTransform>
-                        </Image>
-                    </ScrollViewer>
+                    <Image Name="MainImage" Stretch="None">
+                        <Image.LayoutTransform>
+                            <ScaleTransform x:Name="ImageScale" ScaleX="1" ScaleY="1"/>
+                        </Image.LayoutTransform>
+                    </Image>
+                </ScrollViewer>
             </Border>
-            <GridSplitter Grid.Row="1" Height="5" HorizontalAlignment="Stretch" Background="#2D2D30"/>
-            <TabControl Grid.Row="2">
+            <GridSplitter Grid.Row="1" Height="5" HorizontalAlignment="Stretch" Background="{DynamicResource BorderBrush}"/>
+            <TabControl Grid.Row="2" BorderThickness="0">
                 <TabControl.Resources>
                     <Style TargetType="TabItem">
                         <Setter Property="Template">
                             <Setter.Value>
                                 <ControlTemplate TargetType="TabItem">
                                     <Border x:Name="Border" Padding="12,6" Margin="0,0,2,0" 
-                                Background="#2D2D30" BorderBrush="#333333" BorderThickness="1,1,1,0">
+                                Background="{DynamicResource PanelBackgroundBrush}" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1,1,1,0">
                                         <ContentPresenter ContentSource="Header" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                                     </Border>
                                     <ControlTemplate.Triggers>
                                         <Trigger Property="IsSelected" Value="True">
                                             <!-- Active tab matches the background of the text boxes -->
-                                            <Setter TargetName="Border" Property="Background" Value="#1E1E1E"/>
-                                            <Setter Property="Foreground" Value="White"/>
+                                            <Setter TargetName="Border" Property="Background" Value="{DynamicResource BorderBrush}"/>
+                                            <Setter TargetName="Border" Property="BorderBrush" Value="{DynamicResource SelectedBorderBrush}"/>
+                                            <Setter Property="Foreground" Value="{DynamicResource SelectedForegroundBrush}"/>
                                         </Trigger>
                                         <Trigger Property="IsSelected" Value="False">
                                             <!-- Inactive tab text color -->
-                                            <Setter Property="Foreground" Value="#888888"/>
+                                            <Setter Property="Foreground" Value="{DynamicResource UnSelectedForegroundBrush}"/>
                                         </Trigger>
                                     </ControlTemplate.Triggers>
                                 </ControlTemplate>
@@ -77,18 +127,18 @@
                     </Style>
                 </TabControl.Resources>
                 <TabItem Header="Metadata">
-                    <TextBox Text="{Binding MetadataString, Mode=OneWay}" TextWrapping="Wrap" AcceptsReturn="True" VerticalScrollBarVisibility="Auto" Background="#1E1E1E" Foreground="White" BorderThickness="0" Padding="5" IsReadOnly="True"/>
+                    <TextBox Text="{Binding MetadataString, Mode=OneWay}"/>
                 </TabItem>
                 <TabItem Header="Comfy Prompt">
-                    <TextBox Text="{Binding ComfyString, Mode=OneWay}" TextWrapping="Wrap" AcceptsReturn="True" VerticalScrollBarVisibility="Auto" Background="#1E1E1E" Foreground="White" BorderThickness="0" Padding="5" IsReadOnly="True"/>
+                    <TextBox Text="{Binding ComfyString, Mode=OneWay}"/>
                 </TabItem>
                 <TabItem Header="Comfy Workflow">
-                    <TextBox Text="{Binding WorkflowString, Mode=OneWay}" TextWrapping="Wrap" AcceptsReturn="True" VerticalScrollBarVisibility="Auto" Background="#1E1E1E" Foreground="White" BorderThickness="0" Padding="5" IsReadOnly="True"/>
+                    <TextBox Text="{Binding WorkflowString, Mode=OneWay}"/>
                 </TabItem>
             </TabControl>
-            
+
         </Grid>
-    <StatusBar Grid.Row="2">
+        <StatusBar Grid.Row="2">
             <StatusBarItem Content="{Binding FileCounter, Mode=OneWay}"/>
         </StatusBar>
     </Grid>

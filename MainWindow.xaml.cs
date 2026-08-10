@@ -13,6 +13,8 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
+using imageViewer;
+
 using Microsoft.WindowsAPICodePack.Dialogs;
 
 namespace ImageViewer
@@ -27,23 +29,36 @@ namespace ImageViewer
         private string _comfyString;
         private string _workflowString;
         private string _fileCounter;
+        private string _titleText;
         private bool _isDragging = false;
         private Point _startPoint;
         private double _scrollStartH;
         private double _scrollStartV;
+        private bool isDark=true;
 
         public string MetadataString { get => _metadataString; set { _metadataString = value; OnPropertyChanged(); } }
         public string ComfyString { get => _comfyString; set { _comfyString = value; OnPropertyChanged(); } }
         public string WorkflowString { get => _workflowString; set { _workflowString = value; OnPropertyChanged(); } }
         public string FileCounter { get => _fileCounter; set { _fileCounter = value; OnPropertyChanged(); } }
 
+        public string TitleText { get => _titleText; set { _titleText = value; OnPropertyChanged(); } }
+
 
         // Update constructor to accept startup path
         public MainWindow(string startupFilePath = null)
         {
             InitializeComponent();
-            
+
             DataContext = this;
+
+            TitleText = "AI Image Viewer";
+
+            var dict = new ResourceDictionary();
+            dict.Source = isDark
+                ? new Uri("DarkTheme.xaml", UriKind.Relative)
+                : new Uri("LightTheme.xaml", UriKind.Relative);
+            Application.Current.Resources.MergedDictionaries.Clear();
+            Application.Current.Resources.MergedDictionaries.Add(dict);
 
             if (!string.IsNullOrEmpty(startupFilePath) && File.Exists(startupFilePath))
             {
@@ -58,7 +73,7 @@ namespace ImageViewer
 
         private void UpdateCounter()
         {
-            FileCounter = $"{_currentIndex+1} / {_images.Count}";
+            FileCounter = $"{_currentIndex + 1} / {_images.Count}";
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -120,7 +135,7 @@ namespace ImageViewer
 
         private void FileWatcher_Created(object sender, FileSystemEventArgs e)
         {
-            Debug.WriteLine($"WATCHER FIRED FOR: {e.FullPath}"); 
+            Debug.WriteLine($"WATCHER FIRED FOR: {e.FullPath}");
 
             string ext = Path.GetExtension(e.FullPath).ToLower();
             if (ext == ".png" || ext == ".jpg" || ext == ".jpeg" || ext == ".webp")
@@ -296,15 +311,25 @@ namespace ImageViewer
         private void ImageScrollViewer_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
         {
             e.Handled = true;
-            double zoomFactor = e.Delta > 0 ? 1.15 : 0.85;
-
-            // Limit zoom range
-            if (ImageScale.ScaleX * zoomFactor < 0.1 || ImageScale.ScaleX * zoomFactor > 10)
-                return;
+            if(e.Delta > 0)
+                ZoomIn();
+            else
+                ZoomOut();
 
             MainImage.Stretch = Stretch.None;
-            ImageScale.ScaleX *= zoomFactor;
-            ImageScale.ScaleY *= zoomFactor;
+        }
+
+        private void ZoomIn()
+        {
+            // Adjust these values to match your current zoom step
+            ImageScale.ScaleX += 0.1;
+            ImageScale.ScaleY += 0.1;
+        }
+
+        private void ZoomOut()
+        {
+            ImageScale.ScaleX = Math.Max(0.1, ImageScale.ScaleX - 0.1);
+            ImageScale.ScaleY = Math.Max(0.1, ImageScale.ScaleY - 0.1);
         }
 
         private void DeleteButton_Click(object sender, RoutedEventArgs e)
@@ -389,6 +414,7 @@ namespace ImageViewer
             ExtractMetadata(path);
             ApplyFitToArea();
             UpdateCounter();
+            TitleText = $"AI Image Viewer - {System.IO.Path.GetFileName(path)} - {bitmap.PixelWidth}x{bitmap.PixelHeight}";
 
         }
 
@@ -572,6 +598,29 @@ namespace ImageViewer
             {
                 return raw;
             }
+        }
+
+        private void SysButton_Click(object sender, RoutedEventArgs e)
+        {
+            // 1. Create an instance of your settings window
+            SettingsWindow settingsDlg = new SettingsWindow();
+
+            // 2. (Optional) Set its Owner so it stays centered and stacked properly over the main window
+            settingsDlg.Owner = this;
+            settingsDlg.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+
+            // 3. Open it modally (halts execution here and blocks the main window)
+            settingsDlg.ShowDialog();
+        }
+
+        private void ZoomIn_Click(object sender, RoutedEventArgs e)
+        {
+            ZoomIn();
+        }
+
+        private void ZoomOut_Click(object sender, RoutedEventArgs e)
+        {
+            ZoomOut();
         }
     }
 }
