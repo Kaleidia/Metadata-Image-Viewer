@@ -7,6 +7,6 @@
     <SolidColorBrush x:Key="BorderBrush" Color="#515155"/>
     <SolidColorBrush x:Key="SelectedBackgroundBrush" Color="#007ACC"/>
     <SolidColorBrush x:Key="SelectedBorderBrush" Color="#1C97EA"/>
-    <SolidColorBrush x:Key="SelectedForegroundBrush" Color="#FFFFFF"/>
+    <SolidColorBrush x:Key="SelectedForegroundBrush" Color="#2D2D30"/>
     <SolidColorBrush x:Key="UnSelectedForegroundBrush" Color="#B0B0B0"/>
 </ResourceDictionary>

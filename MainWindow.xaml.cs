@@ -210,7 +210,16 @@ namespace ImageViewer
 
         private void Prev_Click(object sender, RoutedEventArgs e)
         {
-            if (_images.Count == 0) return;
+            bool flowControl = ShowPrevious();
+            if (!flowControl)
+            {
+                return;
+            }
+        }
+
+        private bool ShowPrevious()
+        {
+            if (_images.Count == 0) return false;
 
             _currentIndex--;
             if (_currentIndex < 0)
@@ -218,11 +227,21 @@ namespace ImageViewer
                 _currentIndex = _images.Count - 1; // Wrap around to the last image
             }
             LoadImage();
+            return true;
         }
 
         private void Next_Click(object sender, RoutedEventArgs e)
         {
-            if (_images.Count == 0) return;
+            bool flowControl = ShowNext();
+            if (!flowControl)
+            {
+                return;
+            }
+        }
+
+        private bool ShowNext()
+        {
+            if (_images.Count == 0) return false;
 
             _currentIndex++;
             if (_currentIndex >= _images.Count)
@@ -230,6 +249,7 @@ namespace ImageViewer
                 _currentIndex = 0; // Wrap around to the first image
             }
             LoadImage();
+            return true;
         }
 
         private void FitToArea_Click(object sender, RoutedEventArgs e)
@@ -621,6 +641,26 @@ namespace ImageViewer
         private void ZoomOut_Click(object sender, RoutedEventArgs e)
         {
             ZoomOut();
+        }
+
+        private void PrevPage_Click(object sender, RoutedEventArgs e)
+        {
+            bool flowControl = ShowPrevious();
+            if (!flowControl)
+            {
+                return;
+            }
+
+        }
+
+        private void NextPage_Click(object sender, RoutedEventArgs e)
+        {
+            bool flowControl = ShowNext();
+            if (!flowControl)
+            {
+                return;
+            }
+
         }
     }
 }
