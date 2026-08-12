@@ -30,3 +30,13 @@ Dark:
 Midnight:
 
 <img width="75%" alt="midnight themed" src="https://github.com/user-attachments/assets/1299277c-de86-4795-8b20-15646f0ab19e" />
+
+Two buttons are hidden in the image area that will show up on hovering on the sides:
+
+"Previous image button" visible:
+
+<img width="75%" alt="previous button in image zone" src="https://github.com/user-attachments/assets/95da450a-9643-4a2d-9fcd-99833a994fe1" />
+
+"Next image button" visible:
+
+<img width="75%" alt="next button in image zone" src="https://github.com/user-attachments/assets/34bacd2a-08d6-4f54-b525-7b5dfcc42529" />
