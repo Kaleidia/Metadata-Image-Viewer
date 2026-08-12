@@ -296,7 +296,7 @@ namespace ImageViewer
             }
         }
 
-        private void ImageScrollViewer_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        private void PanContainer_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             if (MainImage.Source == null) return;
 
@@ -305,27 +305,29 @@ namespace ImageViewer
             _scrollStartH = ImageScrollViewer.HorizontalOffset;
             _scrollStartV = ImageScrollViewer.VerticalOffset;
 
-            ImageScrollViewer.CaptureMouse();
+            // Capture to the grid container so it tracks movement even outside bounds
+            ((UIElement)sender).CaptureMouse();
         }
 
-        private void ImageScrollViewer_MouseMove(object sender, MouseEventArgs e)
+        private void PanContainer_MouseMove(object sender, MouseEventArgs e)
         {
             if (!_isDragging) return;
 
             Point currentPoint = e.GetPosition(ImageScrollViewer);
-            Vector delta = currentPoint - _startPoint;
 
-            ImageScrollViewer.ScrollToHorizontalOffset(_scrollStartH - delta.X);
-            ImageScrollViewer.ScrollToVerticalOffset(_scrollStartV - delta.Y);
+            double deltaX = currentPoint.X - _startPoint.X;
+            double deltaY = currentPoint.Y - _startPoint.Y;
+
+            ImageScrollViewer.ScrollToHorizontalOffset(_scrollStartH - deltaX);
+            ImageScrollViewer.ScrollToVerticalOffset(_scrollStartV - deltaY);
         }
 
-        private void ImageScrollViewer_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        private void PanContainer_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
-            if (_isDragging)
-            {
-                _isDragging = false;
-                ImageScrollViewer.ReleaseMouseCapture();
-            }
+            if (!_isDragging) return;
+
+            _isDragging = false;
+            ((UIElement)sender).ReleaseMouseCapture();
         }
 
         private void ImageScrollViewer_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
